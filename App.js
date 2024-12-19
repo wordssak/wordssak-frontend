@@ -1,16 +1,20 @@
-import {SafeAreaView, StyleSheet} from "react-native";
-import MainScreen from "./screens/MainScreen";
+import React from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import MainScreen from './screens/MainScreen';
+import TeacherLoginScreen from './screens/TeacherLoginScreen';
+
+const Stack = createStackNavigator();
 
 const App = () => {
     return (
-        <SafeAreaView style={styles.rootScreen}><MainScreen/></SafeAreaView>
+        <NavigationContainer>
+            <Stack.Navigator screenOptions={{headerShown: false}}>
+                <Stack.Screen name="Main" component={MainScreen}/>
+                <Stack.Screen name="Login" component={TeacherLoginScreen}/>
+            </Stack.Navigator>
+        </NavigationContainer>
     );
 };
 
 export default App;
-
-const styles = StyleSheet.create({
-    rootScreen: {
-        flex: 1,
-    }
-});
