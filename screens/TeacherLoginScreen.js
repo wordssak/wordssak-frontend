@@ -1,9 +1,14 @@
 import React from 'react';
 import {Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import BackButton from "../components/BackButton";
 
 const TeacherLoginScreen = () => {
     return (
         <View style={styles.container}>
+            <View style={styles.backButton}>
+                <BackButton/>
+            </View>
+
             <Image source={require('../assets/main-cloud.png')} style={styles.image}/>
 
             <TextInput placeholder="이메일 주소를 입력해 주세요." style={styles.input}/>
@@ -66,6 +71,13 @@ const styles = StyleSheet.create({
         color: '#3A4A5E',
         marginTop: 10,
     },
+    backButton: {
+        position: 'absolute',
+        top: 10,
+        left: 10,
+        padding: 10,
+        marginTop: 50
+    }
 });
 
 export default TeacherLoginScreen;
