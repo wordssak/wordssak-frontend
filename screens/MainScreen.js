@@ -1,7 +1,10 @@
 import React from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 const MainScreen = () => {
+    const navigation = useNavigation();
+
     return (
         <View style={styles.container}>
             <Image source={require('../assets/main-cloud.png')} style={styles.image}/>
@@ -11,7 +14,10 @@ const MainScreen = () => {
             <TouchableOpacity style={styles.button}>
                 <Text style={styles.buttonText}>학생입니다</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity
+                style={styles.button}
+                onPress={() => navigation.navigate('Login')}
+            >
                 <Text style={styles.buttonText}>교사입니다</Text>
             </TouchableOpacity>
         </View>
