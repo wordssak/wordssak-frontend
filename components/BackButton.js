@@ -21,13 +21,14 @@ const BackButton = () => {
 const styles = StyleSheet.create({
     container: {
         position: 'absolute',
-        top: 10,
-        left: 10,
+        top: 20,
+        left: 20,
         padding: 10,
+        marginTop: 50
     },
     image: {
-        width: 24,
-        height: 24,
+        width: 20,
+        height: 20,
         resizeMode: 'contain',
     },
 });

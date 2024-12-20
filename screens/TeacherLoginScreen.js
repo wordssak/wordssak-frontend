@@ -1,24 +1,40 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import BackButton from "../components/BackButton";
+import {useNavigation, useRoute} from "@react-navigation/native";
 
 const TeacherLoginScreen = () => {
+    const navigation = useNavigation();
+    const route = useRoute();
+
+    const [email, setEmail] = useState(route.params?.email || '');
+    const [password, setPassword] = useState('');
+
     return (
         <View style={styles.container}>
-            <View style={styles.backButton}>
-                <BackButton/>
-            </View>
+            <BackButton/>
 
             <Image source={require('../assets/main-cloud.png')} style={styles.image}/>
 
-            <TextInput placeholder="이메일 주소를 입력해 주세요." style={styles.input}/>
-            <TextInput placeholder="비밀번호를 입력해 주세요." style={styles.input} secureTextEntry/>
+            <TextInput
+                placeholder="이메일 주소를 입력해 주세요."
+                style={styles.input}
+                value={email}
+                onChangeText={setEmail}
+            />
+
+            <TextInput
+                placeholder="비밀번호를 입력해 주세요."
+                style={styles.input}
+                onChangeText={setPassword}
+                secureTextEntry
+            />
 
             <TouchableOpacity style={styles.loginButton}>
                 <Text style={styles.loginButtonText}>로그인</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('TeacherSignUp')}>
                 <Text style={styles.registerText}>회원 가입</Text>
             </TouchableOpacity>
         </View>
@@ -70,13 +86,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#3A4A5E',
         marginTop: 10,
-    },
-    backButton: {
-        position: 'absolute',
-        top: 10,
-        left: 10,
-        padding: 10,
-        marginTop: 50
+        textDecorationLine: 'underline'
     }
 });
 
