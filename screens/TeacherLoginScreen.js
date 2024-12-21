@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import BackButton from "../components/BackButton";
 import {useNavigation, useRoute} from "@react-navigation/native";
+import {postTeacherSignIn} from "../api/teacherApi";
 
 const TeacherLoginScreen = () => {
     const navigation = useNavigation();
@@ -9,6 +10,15 @@ const TeacherLoginScreen = () => {
 
     const [email, setEmail] = useState(route.params?.email || '');
     const [password, setPassword] = useState('');
+
+    const handleSignIn = async () => {
+        const signInForm = {
+            email,
+            password,
+        };
+
+        await postTeacherSignIn(signInForm, navigation);
+    };
 
     return (
         <View style={styles.container}>
@@ -30,7 +40,10 @@ const TeacherLoginScreen = () => {
                 secureTextEntry
             />
 
-            <TouchableOpacity style={styles.loginButton}>
+            <TouchableOpacity
+                style={styles.loginButton}
+                onPress={handleSignIn}
+            >
                 <Text style={styles.loginButtonText}>로그인</Text>
             </TouchableOpacity>
 
