@@ -15,7 +15,7 @@ export const postTeacherSignUp = async (signUpForm, navigation) => {
                 onPress: () =>
                     navigation.reset({
                         index: 0,
-                        routes: [{name: 'ClassManagement'}],
+                        routes: [{name: 'Dashboard'}],
                     }),
             }
         ]);
@@ -55,7 +55,7 @@ export const postTeacherSignIn = async (signInForm, navigation) => {
                 onPress: () =>
                     navigation.reset({
                         index: 0,
-                        routes: [{name: 'ClassManagement'}],
+                        routes: [{name: 'Dashboard'}],
                     }),
             }
         ]);
