@@ -12,11 +12,11 @@ const DashboardScreen = () => {
     };
 
     const handleAddClass = () => {
-        navigation.navigate('AddClass');
+        navigation.navigate('OurClassInfo');
     };
 
     const handleCreateClassCode = () => {
-        navigation.navigate('CreateClassCode');
+        navigation.navigate('OurClassInfo');
     };
 
     return (
