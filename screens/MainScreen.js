@@ -11,8 +11,10 @@ const MainScreen = () => {
 
             <Text style={styles.title}>단어쓱싹!</Text>
 
-            <TouchableOpacity style={styles.button}>
-                <Text style={styles.buttonText}>학생입니다</Text>
+            <TouchableOpacity
+                style={styles.button}
+                onPress={() => navigation.navigate('StudentCodeInput')}
+            > <Text style={styles.buttonText}>학생입니다</Text>
             </TouchableOpacity>
             <TouchableOpacity
                 style={styles.button}
@@ -33,8 +35,8 @@ const styles = StyleSheet.create({
         padding: 16,
     },
     image: {
-        width: 200,
-        height: 150,
+        width: 300,
+        height: 225,
         resizeMode: 'contain',
         marginBottom: 25,
     },
