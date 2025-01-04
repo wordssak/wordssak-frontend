@@ -2,9 +2,9 @@ import React, {useState} from 'react';
 import {Alert, FlatList, Keyboard, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import BackButton from '../components/BackButton';
-import {searchSchools} from '../api/schoolApi';
+import {getSearchSchools} from '../api/schoolApi';
 import {useNavigation} from "@react-navigation/native";
-import {submitClassInfo} from "../api/classroomApi";
+import {postSubmitClassInfo} from "../api/classroomApi";
 
 const OurClassInfoScreen = () => {
     const navigation = useNavigation();
@@ -35,7 +35,7 @@ const OurClassInfoScreen = () => {
             return;
         }
 
-        const result = await searchSchools(text);
+        const result = await getSearchSchools(text);
         console.log('학교명 목록: ', result);
 
         if (result) {
@@ -66,7 +66,7 @@ const OurClassInfoScreen = () => {
             classNumber,
         };
 
-        await submitClassInfo(payload);
+        await postSubmitClassInfo(payload);
     };
 
     return (

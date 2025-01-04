@@ -12,12 +12,12 @@ const TeacherLoginScreen = () => {
     const [password, setPassword] = useState('');
 
     const handleSignIn = async () => {
-        const signInForm = {
-            email,
+        const payload = {
+            email: `${email}@korea.kr`,
             password,
         };
 
-        await postTeacherSignIn(signInForm, navigation);
+        await postTeacherSignIn(payload, navigation);
     };
 
     return (
@@ -26,16 +26,21 @@ const TeacherLoginScreen = () => {
 
             <Image source={require('../assets/main-cloud.png')} style={styles.image}/>
 
-            <TextInput
-                placeholder="이메일 주소를 입력해 주세요."
-                style={styles.input}
-                value={email}
-                onChangeText={setEmail}
-            />
+            <View style={styles.emailContainer}>
+                <TextInput
+                    placeholder="이메일 주소를 입력해 주세요."
+                    style={styles.emailInput}
+                    value={email}
+                    onChangeText={setEmail}
+                />
+                <Text style={styles.emailText}>
+                    @ korea.kr
+                </Text>
+            </View>
 
             <TextInput
                 placeholder="비밀번호를 입력해 주세요."
-                style={styles.input}
+                style={styles.passwordInput}
                 onChangeText={setPassword}
                 secureTextEntry
             />
@@ -51,7 +56,8 @@ const TeacherLoginScreen = () => {
                 <Text style={styles.registerText}>회원 가입</Text>
             </TouchableOpacity>
         </View>
-    );
+    )
+        ;
 };
 
 const styles = StyleSheet.create({
@@ -68,7 +74,25 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
         marginBottom: 25,
     },
-    input: {
+    emailContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: '80%',
+    },
+    emailInput: {
+        width: '67%',
+        padding: 10,
+        borderWidth: 1,
+        borderColor: '#CCCCCC',
+        borderRadius: 15,
+        marginBottom: 15,
+    },
+    emailText: {
+        fontSize: 18,
+        marginBottom: 13,
+        marginLeft: 5,
+    },
+    passwordInput: {
         width: '80%',
         padding: 10,
         borderWidth: 1,
@@ -99,7 +123,7 @@ const styles = StyleSheet.create({
         color: '#3A4A5E',
         marginTop: 10,
         textDecorationLine: 'underline'
-    }
+    },
 });
 
 export default TeacherLoginScreen;

@@ -14,7 +14,8 @@ const MainScreen = () => {
             <TouchableOpacity
                 style={styles.button}
                 onPress={() => navigation.navigate('StudentCodeInput')}
-            > <Text style={styles.buttonText}>학생입니다</Text>
+            >
+                <Text style={styles.buttonText}>학생입니다</Text>
             </TouchableOpacity>
             <TouchableOpacity
                 style={styles.button}
