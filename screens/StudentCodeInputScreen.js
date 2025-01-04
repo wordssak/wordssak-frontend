@@ -2,12 +2,14 @@ import React, {useState} from 'react';
 import {Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import BackButton from "../components/BackButton";
+import {getClassInfo} from "../api/classroomApi";
 
 const StudentCodeInputScreen = () => {
     const navigation = useNavigation();
     const [classCode, setClassCode] = useState('');
 
-    const handleConfirm = () => {
+    const handleConfirm = async () => {
+        await getClassInfo(classCode, navigation);
     };
 
     return (

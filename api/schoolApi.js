@@ -2,9 +2,9 @@ import axios from 'axios';
 import {Alert} from "react-native";
 import {SCHOOL} from "./config";
 
-export const searchSchools = async (keyword) => {
+export const getSearchSchools = async (keyword) => {
     if (!keyword.trim()) {
-        Alert.alert('검색어 입력', '학교 이름을 입력해주세요.');
+        Alert.alert('검색어 입력', '학교 이름을 입력해 주세요.');
         return;
     }
 
