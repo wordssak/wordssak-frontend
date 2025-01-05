@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
         flexShrink: 0,
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 15,
+        borderRadius: 20,
         marginRight: -20,
     },
     addButtonImage: {

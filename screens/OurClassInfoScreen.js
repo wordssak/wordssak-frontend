@@ -132,7 +132,7 @@ const OurClassInfoScreen = () => {
 
                         <TextInput
                             placeholder="1"
-                            style={styles.gradeInput} r
+                            style={styles.classNumberInput} r
                             keyboardType="numeric"
                             onChangeText={setClassNumber}
                         />
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderWidth: 1,
         borderColor: '#CCCCCC',
-        borderRadius: 10,
+        borderRadius: 15,
         backgroundColor: '#F9F9F9',
         paddingHorizontal: 10,
         flex: 0.5,
@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     dropdown: {
-        width: 100,
+        width: 67,
         borderColor: '#CCCCCC',
         backgroundColor: '#F9F9F9',
     },
@@ -250,13 +250,13 @@ const styles = StyleSheet.create({
         borderColor: '#CCCCCC',
         maxHeight: 300,
     },
-    gradeInput: {
-        width: 50,
+    classNumberInput: {
+        width: 67,
         height: 50,
         padding: 10,
         borderWidth: 1,
         borderColor: '#CCCCCC',
-        borderRadius: 10,
+        borderRadius: 15,
         backgroundColor: '#F9F9F9',
         textAlign: 'center',
     },
@@ -269,7 +269,7 @@ const styles = StyleSheet.create({
     nextButton: {
         marginTop: 20,
         paddingVertical: 15,
-        borderRadius: 10,
+        borderRadius: 20,
         backgroundColor: '#C9E6F0',
         alignItems: 'center',
     },

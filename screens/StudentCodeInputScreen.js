@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
         width: '80%',
         paddingVertical: 12,
         backgroundColor: '#C9E6F0',
-        borderRadius: 15,
+        borderRadius: 20,
         alignItems: 'center',
     },
     confirmButtonText: {
