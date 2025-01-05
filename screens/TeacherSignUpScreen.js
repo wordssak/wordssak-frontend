@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
         padding: 10,
         borderWidth: 1,
         borderColor: '#CCCCCC',
-        borderRadius: 10,
+        borderRadius: 15,
         backgroundColor: '#F9F9F9',
     },
     emailRow: {
@@ -269,7 +269,7 @@ const styles = StyleSheet.create({
         width: '100%',
         paddingVertical: 15,
         backgroundColor: '#C9E6F0',
-        borderRadius: 15,
+        borderRadius: 20,
         alignItems: 'center',
         marginBottom: 20,
     },
