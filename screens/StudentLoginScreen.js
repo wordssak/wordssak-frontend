@@ -1,9 +1,11 @@
 import React, {useState} from 'react';
 import {Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import BackButton from '../components/BackButton';
-import {useRoute} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {postStudentSignIn} from "../api/studentApi";
 
 const StudentLoginScreen = () => {
+    const navigation = useNavigation();
     const route = useRoute();
 
     const {grade, classNumber} = route.params?.classInfo || {};
@@ -11,7 +13,51 @@ const StudentLoginScreen = () => {
     const [birthDate, setBirthDate] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
 
+    const currentYear = new Date().getFullYear();
+    const MIN_YEAR = currentYear - 14;
+    const MAX_YEAR = currentYear - 7;
+
+    const isValidDate = (year, month, day) => {
+        if (month < 1 || month > 12) return false;
+        const daysInMonth = new Date(year, month, 0).getDate();
+        return day > 0 && day <= daysInMonth;
+    };
+
+    const validate = () => {
+        if (!/^[가-힣a-zA-Z]{2,20}$/.test(name)) {
+            setErrorMessage('*올바른 정보를 입력해 주세요.');
+            return false;
+        }
+
+        if (!/^\d{6}$/.test(birthDate)) {
+            setErrorMessage('*올바른 정보를 입력해 주세요.');
+            return false;
+        } else {
+            const year = parseInt(birthDate.slice(0, 2), 10) + 2000;
+            const month = parseInt(birthDate.slice(2, 4), 10);
+            const day = parseInt(birthDate.slice(4, 6), 10);
+
+            if (year < MIN_YEAR || year > MAX_YEAR || !isValidDate(year, month, day)) {
+                setErrorMessage('*올바른 정보를 입력해 주세요.');
+                return false;
+            }
+        }
+
+        setErrorMessage('');
+        return true;
+    };
+
     const handleLogin = async () => {
+        if (!validate()) {
+            return;
+        }
+
+        const payload = {
+            name,
+            birth: birthDate,
+        };
+
+        await postStudentSignIn(payload, navigation);
     };
 
     return (
@@ -28,7 +74,7 @@ const StudentLoginScreen = () => {
 
             <View style={styles.inputContainer}>
                 <TextInput
-                    placeholder="이름 예) 김한재"
+                    placeholder="이름 예) 김천재"
                     style={styles.input}
                     value={name}
                     onChangeText={(text) => {

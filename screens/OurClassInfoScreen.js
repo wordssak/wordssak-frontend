@@ -56,7 +56,7 @@ const OurClassInfoScreen = () => {
 
     const handleNextStep = async () => {
         if (!keyword || !selectedGrade || !classNumber) {
-            Alert.alert('오류', '학교명, 학년, 반을 모두 입력해주세요.');
+            Alert.alert('등록 실패', '학교명, 학년, 반을 모두 입력해주세요.');
             return;
         }
 
