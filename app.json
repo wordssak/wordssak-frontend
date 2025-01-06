@@ -13,13 +13,24 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "엑셀 파일을 업로드하기 위해 파일 접근 권한이 필요합니다.",
+        "NSDocumentsDirectoryUsageDescription": "엑셀 파일을 저장 및 불러오기 위해 접근 권한이 필요합니다."
+      }
     },
     "android": {
+      "permissions": [
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.anonymous.voca"
     },
     "web": {
       "favicon": "./assets/favicon.png"
