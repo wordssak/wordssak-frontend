@@ -4,7 +4,7 @@ import {Alert} from "react-native";
 
 export const postTeacherSignUp = async (signUpForm, navigation) => {
     try {
-        const response = await axios.post(`${TEACHER}/signup`, signUpForm, {
+        await axios.post(`${TEACHER}/signup`, signUpForm, {
             headers: {
                 'Content-Type': 'application/json',
             },
