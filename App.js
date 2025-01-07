@@ -4,7 +4,6 @@ import {createStackNavigator} from '@react-navigation/stack';
 import MainScreen from './screens/MainScreen';
 import TeacherLoginScreen from './screens/TeacherLoginScreen';
 import WordListScreen from "./screens/WordListScreen";
-import ClassInfoScreen from "./screens/ClassInfoScreen";
 import WordSetConfigScreen from "./screens/WordSetConfigScreen";
 import DashboardProgressScreen from "./screens/DashboardProgressScreen";
 import DashboardHomeScreen from "./screens/DashboardHomeScreen";
@@ -23,7 +22,6 @@ const App = () => {
             <Stack.Navigator screenOptions={{headerShown: false}}>
                 <Stack.Screen name="Main" component={MainScreen}/>
                 <Stack.Screen name="TeacherLogin" component={TeacherLoginScreen}/>
-              <Stack.Screen name="ClassInfo" component={ClassInfoScreen} />
               <Stack.Screen name="WordSetConfig" component={WordSetConfigScreen} />
               <Stack.Screen name="DashboardHome" component={DashboardHomeScreen} />
               <Stack.Screen name="DashboardProgress" component={DashboardProgressScreen} />

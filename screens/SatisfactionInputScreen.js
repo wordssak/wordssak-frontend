@@ -1,18 +1,46 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Alert,
+} from 'react-native';
+import axios from 'axios';
 
-const SatisfactionInputScreen = () => {
+const SatisfactionInputScreen = ({ route }) => {
+  const { words } = route.params;
+
+  const memorizedCount = words.filter((word) => word.studyCount >= 5).length;
+  const notMemorizedCount = words.length - memorizedCount;
+
   const [selectedSatisfaction, setSelectedSatisfaction] = useState(null);
 
   const handleSatisfactionSelect = (level) => {
     setSelectedSatisfaction(level);
   };
 
-  const handleConfirm = () => {
-    if (selectedSatisfaction !== null) {
-      alert(`선택한 만족도: ${selectedSatisfaction}`);
-    } else {
-      alert('만족도를 선택해주세요!');
+  const handleConfirm = async () => {
+    if (selectedSatisfaction === null) {
+      Alert.alert('알림', '만족도를 선택해주세요!');
+      return;
+    }
+
+    const payload = {
+      satisfaction: selectedSatisfaction,
+      memorizedCount,
+      notMemorizedCount,
+    };
+
+    try {
+      const response = await axios.post(
+          'http://172.30.1.1:8080/api/study/submit',
+          payload
+      );
+      Alert.alert('성공', '학습 결과가 성공적으로 저장되었습니다.');
+    } catch (error) {
+      console.error('서버 요청 실패:', error);
+      Alert.alert('오류 발생', '서버와 통신하는 중 문제가 발생했습니다.');
     }
   };
 
@@ -23,11 +51,11 @@ const SatisfactionInputScreen = () => {
         <View style={styles.statsContainer}>
           <View style={styles.stat}>
             <Text style={styles.statLabel}>외웠어요</Text>
-            <Text style={styles.statValue}>8개</Text>
+            <Text style={styles.statValue}>{memorizedCount}개</Text>
           </View>
           <View style={styles.stat}>
             <Text style={styles.statLabel}>못 외웠어요</Text>
-            <Text style={styles.statValue}>2개</Text>
+            <Text style={styles.statValue}>{notMemorizedCount}개</Text>
           </View>
         </View>
 
@@ -35,32 +63,34 @@ const SatisfactionInputScreen = () => {
           <TouchableOpacity
               style={[
                 styles.satisfactionButton,
-                selectedSatisfaction === '좋음' && styles.satisfactionSelected,
+                selectedSatisfaction === 'BEST' && styles.satisfactionSelected,
                 { backgroundColor: '#4CAF50' },
               ]}
-              onPress={() => handleSatisfactionSelect('좋음')}
+              onPress={() => handleSatisfactionSelect('BEST')}
           >
-            <Text style={styles.satisfactionText}>좋음</Text>
+            <Text style={styles.satisfactionText}>BEST</Text>
           </TouchableOpacity>
+
           <TouchableOpacity
               style={[
                 styles.satisfactionButton,
-                selectedSatisfaction === '보통' && styles.satisfactionSelected,
+                selectedSatisfaction === 'GOOD' && styles.satisfactionSelected,
                 { backgroundColor: '#FFC107' },
               ]}
-              onPress={() => handleSatisfactionSelect('보통')}
+              onPress={() => handleSatisfactionSelect('GOOD')}
           >
-            <Text style={styles.satisfactionText}>보통</Text>
+            <Text style={styles.satisfactionText}>GOOD</Text>
           </TouchableOpacity>
+
           <TouchableOpacity
               style={[
                 styles.satisfactionButton,
-                selectedSatisfaction === '나쁨' && styles.satisfactionSelected,
+                selectedSatisfaction === 'BAD' && styles.satisfactionSelected,
                 { backgroundColor: '#FF5252' },
               ]}
-              onPress={() => handleSatisfactionSelect('나쁨')}
+              onPress={() => handleSatisfactionSelect('BAD')}
           >
-            <Text style={styles.satisfactionText}>나쁨</Text>
+            <Text style={styles.satisfactionText}>BAD</Text>
           </TouchableOpacity>
         </View>
 
