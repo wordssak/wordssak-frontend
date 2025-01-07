@@ -78,7 +78,7 @@ const WordSetConfigScreen = () => {
 
   return (
       <View style={styles.container}>
-        <Text style={styles.title}>단어 불러오기</Text>
+        <Text style={styles.title}>학습 설정</Text>
 
         <View style={styles.pickerContainer}>
           <Text style={styles.label}>학년</Text>
@@ -136,7 +136,7 @@ const WordSetConfigScreen = () => {
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-          <Text style={styles.buttonText}>확인</Text>
+          <Text style={styles.buttonText}>학습 시작</Text>
         </TouchableOpacity>
 
         <ScrollView style={styles.responseContainer}>
@@ -154,6 +154,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    paddingTop: 40,
     backgroundColor: '#FFFFFF',
   },
   title: {
@@ -197,7 +198,7 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 24,
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#7fb6f5',
     padding: 16,
     borderRadius: 8,
     alignItems: 'center',

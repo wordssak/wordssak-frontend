@@ -1,20 +1,46 @@
-import React from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { FlatList, StyleSheet, Text, View, Alert } from 'react-native';
+import axios from 'axios';
 
-const DashboardProgressScreen = () => {
-  const data = [
-    { id: '1', name: '가나다', progress: '6/15', status: 'yellow' },
-  ];
+const DashboardProgressScreen = ({ route }) => {
+  const [data, setData] = useState([]);
+  const classroomId = route.params?.classroomId || 1;
 
-  const renderItem = ({ item }) => (
+  useEffect(() => {
+    fetchProgressData();
+  }, []);
+
+  const fetchProgressData = async () => {
+    try {
+      const response = await axios.get(
+          `http://172.30.1.1:8080/api/study/classroom/${classroomId}`
+      );
+
+      setData(response.data);
+    } catch (error) {
+      console.error('데이터 불러오기 실패:', error);
+      Alert.alert('오류', '학습 진척도를 불러오는 중 문제가 발생했습니다.');
+    }
+  };
+
+  const renderItem = ({ item, index }) => (
       <View style={styles.row}>
-        <Text style={styles.cell}>{item.id}</Text>
-        <Text style={styles.cell}>{item.name}</Text>
-        <Text style={styles.cell}>{item.progress}</Text>
+        <Text style={styles.cell}>{index + 1}</Text>
+        <Text style={styles.cell}>{item.studentName}</Text>
+        <Text style={styles.cell}>
+          {item.memorizedCount}/{item.totalCount}
+        </Text>
         <View
             style={[
               styles.statusIndicator,
-              { backgroundColor: item.status === 'red' ? '#FF0000' : item.status === 'yellow' ? '#FFC107' : '#4CAF50' },
+              {
+                backgroundColor:
+                    item.satisfaction === 'BEST'
+                        ? '#4CAF50'
+                        : item.satisfaction === 'GOOD'
+                            ? '#FFC107'
+                            : '#FF5252',
+              },
             ]}
         />
       </View>
@@ -26,7 +52,7 @@ const DashboardProgressScreen = () => {
         <FlatList
             data={data}
             renderItem={renderItem}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item, index) => (item.id ? item.id.toString() : index.toString())}
             ListHeaderComponent={() => (
                 <View style={styles.header}>
                   <Text style={styles.cell}>번호</Text>
@@ -44,6 +70,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    paddingTop: 40,
     backgroundColor: '#FFFFFF',
   },
   title: {
