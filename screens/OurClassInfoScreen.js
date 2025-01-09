@@ -66,7 +66,7 @@ const OurClassInfoScreen = () => {
             classNumber,
         };
 
-        await postSubmitClassInfo(payload);
+        await postSubmitClassInfo(payload, navigation);
     };
 
     return (
@@ -142,7 +142,7 @@ const OurClassInfoScreen = () => {
             </View>
 
             <TouchableOpacity style={styles.nextButton} onPress={handleNextStep}>
-                <Text style={styles.nextButtonText}>다음 단계</Text>
+                <Text style={styles.nextButtonText}>확인</Text>
             </TouchableOpacity>
         </View>
     );
