@@ -1,7 +1,7 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import React from "react";
 
-export default function NoClassCodeComponent({setActiveTab, navigation}) {
+export default function NoClassCodeComponent({activeTab, setActiveTab, navigation}) {
     const handleTabPress = (tab) => {
         setActiveTab(tab);
         navigation.navigate(tab === 'classManagement' ? 'ClassManagement' : 'LearningStatus');
