@@ -13,7 +13,7 @@ export const postSubmitClassInfo = async (registerClassInfoRequest, navigation) 
         Alert.alert('클래스 등록', '클래스가 등록되었습니다.', [
             {
                 text: '확인',
-                onPress: () => navigation.goBack()
+                onPress: () => navigation.navigate('Dashboard')
             }
         ]);
     } catch (error) {
@@ -42,11 +42,21 @@ export const getClassInfo = async (classCode, navigation) => {
     }
 
     try {
-        const response = await axios.get(CLASSROOM, {
+        const response = await axios.get(`${CLASSROOM}/info`, {
             params: {classCode: classCode}
         });
 
         navigation.navigate('StudentLogin', {classInfo: response.data});
+    } catch (error) {
+        console.error(error);
+        Alert.alert('클래스 정보 가져오기 실패', '클래스 정보를 불러오지 못했습니다.');
+    }
+}
+
+export const getClassrooms = async () => {
+    try {
+        const response = await axios.get(CLASSROOM);
+        return response.data;
     } catch (error) {
         console.error(error);
         Alert.alert('클래스 정보 가져오기 실패', '클래스 정보를 불러오지 못했습니다.');
