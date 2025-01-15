@@ -3,6 +3,7 @@ import {Alert, Image, Platform, StyleSheet, Text, TextInput, TouchableOpacity, V
 import DropDownPicker from 'react-native-dropdown-picker';
 import * as DocumentPicker from "expo-document-picker";
 import {deleteClassroom} from "../api/classroomApi";
+import {postRegisterWordBook} from "../api/wordBookApi";
 
 const ClassCodeComponent = ({classrooms, activeTab, setActiveTab, navigation}) => {
     const [selectedSemester, setSelectedSemester] = useState('1');
@@ -38,7 +39,7 @@ const ClassCodeComponent = ({classrooms, activeTab, setActiveTab, navigation}) =
     };
 
     const handleDeleteClass = async () => {
-        await deleteClassroom(currentClassroom.id);
+        await deleteClassroom(currentClassroom.id, navigation);
     };
 
     const handleCsvUpload = async () => {
@@ -60,6 +61,19 @@ const ClassCodeComponent = ({classrooms, activeTab, setActiveTab, navigation}) =
     };
 
     const handleRegisterWordBook = async () => {
+        const words = [
+            {word: "apple", meaning: "사과"},
+            {word: "banana", meaning: "바나나"},
+        ];
+
+        const payload = {
+            classroomId: currentClassroom.id,
+            semester: selectedSemester,
+            unit: selectedUnit,
+            reward: reward,
+        };
+
+        await postRegisterWordBook(payload, navigation);
     };
 
     return (
