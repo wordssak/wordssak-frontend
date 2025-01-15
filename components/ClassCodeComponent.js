@@ -33,6 +33,7 @@ const ClassCodeComponent = ({classrooms, activeTab, setActiveTab, navigation}) =
     }
 
     const handleAddClass = () => {
+        navigation.navigate('OurClassInfo', {schoolName: currentClassroom.schoolName});
     };
 
     const handleDeleteClass = async () => {
