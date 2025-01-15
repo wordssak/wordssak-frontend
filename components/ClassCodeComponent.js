@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {Alert, Image, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import * as DocumentPicker from "expo-document-picker";
+import {deleteClassroom} from "../api/classroomApi";
 
 const ClassCodeComponent = ({classrooms, activeTab, setActiveTab, navigation}) => {
     const [selectedSemester, setSelectedSemester] = useState('1');
@@ -37,6 +38,7 @@ const ClassCodeComponent = ({classrooms, activeTab, setActiveTab, navigation}) =
     };
 
     const handleDeleteClass = async () => {
+        await deleteClassroom(currentClassroom.id);
     };
 
     const handleCsvUpload = async () => {

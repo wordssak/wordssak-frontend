@@ -62,3 +62,31 @@ export const getClassrooms = async () => {
         Alert.alert('클래스 정보 가져오기 실패', '클래스 정보를 불러오지 못했습니다.');
     }
 }
+
+export const deleteClassroom = async (classroomId) => {
+    Alert.alert('클래스를 삭제하시겠어요?', '지금까지의 모든 정보가 사라져요.\n삭제된 정보는 다시 복구할 수 없어요.', [
+        {
+            text: '삭제하기',
+            onPress: async () => {
+                try {
+                    await axios.delete(`${CLASSROOM}/${classroomId}`);
+                    Alert.alert('클래스 삭제', '클래스가 삭제되었습니다.'), [
+                        {
+                            text: '확인',
+                        }
+                    ]
+                } catch (error) {
+                    console.error(error);
+                    Alert.alert('클래스 삭제 실패', '클래스 삭제에 실패했습니다. 잠시 후 다시 시도해 주세요.', [
+                        {
+                            text: '확인',
+                        }
+                    ]);
+                }
+            }
+        },
+        {
+            text: '취소',
+        }
+    ]);
+}
