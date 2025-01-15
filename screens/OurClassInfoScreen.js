@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Alert, FlatList, Keyboard, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import BackButton from '../components/BackButton';
@@ -6,8 +6,9 @@ import {getSearchSchools} from '../api/schoolApi';
 import {useNavigation} from "@react-navigation/native";
 import {postSubmitClassInfo} from "../api/classroomApi";
 
-const OurClassInfoScreen = () => {
+const OurClassInfoScreen = ({route}) => {
     const navigation = useNavigation();
+    const {schoolName} = route.params ? route.params : {};
 
     const [keyword, setKeyword] = useState('');
     const [schoolNames, setSchoolNames] = useState([]);
@@ -23,8 +24,13 @@ const OurClassInfoScreen = () => {
         {label: '5', value: '5'},
         {label: '6', value: '6'},
     ]);
-
     const [classNumber, setClassNumber] = useState('1');
+
+    useEffect(() => {
+        if (schoolName) {
+            setKeyword(schoolName.replace(/초등학교$/, ''));
+        }
+    }, [schoolName]);
 
     const handleSearch = async (text) => {
         setKeyword(text);
@@ -36,8 +42,6 @@ const OurClassInfoScreen = () => {
         }
 
         const result = await getSearchSchools(text);
-        console.log('학교명 목록: ', result);
-
         if (result) {
             setSchoolNames(result);
             setShowSuggestions(true);
@@ -81,20 +85,26 @@ const OurClassInfoScreen = () => {
             <View style={styles.content}>
                 <View style={styles.inputGroup}>
                     <Text style={styles.label}>학교</Text>
-                    <View style={styles.searchRow}>
-                        <View style={styles.searchInputContainer}>
-                            <TextInput
-                                placeholder="학교 이름"
-                                value={keyword}
-                                onChangeText={handleSearch}
-                                style={styles.searchInput}
-                            />
-                            <TouchableOpacity style={styles.searchButton}>
-                                <Text style={styles.searchButtonText}>🔍</Text>
-                            </TouchableOpacity>
+                    {schoolName ? (
+                        <View style={styles.schoolNameContainer}>
+                            <Text style={styles.schoolNameText}>{schoolName}</Text>
                         </View>
-                        <Text style={styles.schoolType}>초등학교</Text>
-                    </View>
+                    ) : (
+                        <View style={styles.searchRow}>
+                            <View style={styles.searchInputContainer}>
+                                <TextInput
+                                    placeholder="학교 이름"
+                                    value={keyword}
+                                    onChangeText={handleSearch}
+                                    style={styles.searchInput}
+                                />
+                                <TouchableOpacity style={styles.searchButton}>
+                                    <Text style={styles.searchButtonText}>🔍</Text>
+                                </TouchableOpacity>
+                            </View>
+                            <Text style={styles.schoolType}>초등학교</Text>
+                        </View>
+                    )}
                     {showSuggestions && (
                         <FlatList
                             data={schoolNames}
@@ -217,6 +227,10 @@ const styles = StyleSheet.create({
     },
     schoolType: {
         marginLeft: 10,
+        fontSize: 16,
+        color: '#3A4A5E',
+    },
+    schoolNameText: {
         fontSize: 16,
         color: '#3A4A5E',
     },
