@@ -7,6 +7,8 @@ import {
   ScrollView,
   Alert,
   TextInput,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import axios from 'axios';
 import { Ionicons } from '@expo/vector-icons';
@@ -57,9 +59,7 @@ const DashboardHomeScreen = () => {
 
   const handleFileUpload = async () => {
     try {
-      const res = await DocumentPicker.getDocumentAsync({
-        type: '*/*',
-      });
+      const res = await DocumentPicker.getDocumentAsync({ type: '*/*' });
 
       if (res.canceled) {
         Alert.alert('취소됨', '파일 선택이 취소되었습니다.');
@@ -108,11 +108,17 @@ const DashboardHomeScreen = () => {
     };
 
     try {
-      const response = await axios.post(
-          'http://172.30.1.1:8080/api/wordbook/enroll',
-          payload
-      );
-      Alert.alert('성공', '단어장이 성공적으로 등록되었습니다.');
+      await axios.post('http://172.30.1.1:8080/api/wordbook/enroll', payload);
+      Alert.alert('성공', '단어장이 성공적으로 등록되었습니다.', [
+        {
+          text: '확인',
+          onPress: () => {
+            fetchClassrooms();
+            fetchActiveStatus(classCode);
+            setParsedData([]);
+          },
+        },
+      ]);
     } catch (error) {
       Alert.alert('오류 발생', '서버와 통신하는 중 문제가 발생했습니다.');
     }
@@ -133,101 +139,112 @@ const DashboardHomeScreen = () => {
   };
 
   return (
-      <View style={styles.container}>
-        <TouchableOpacity
-            style={styles.dropdown}
-            onPress={() => setDropdownVisible(!dropdownVisible)}
-        >
-          <Text style={styles.dropdownText}>{selectedClass}</Text>
-          <Ionicons name="chevron-down" size={20} color="#000" />
-        </TouchableOpacity>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.container}>
+          <TouchableOpacity
+              style={styles.dropdown}
+              onPress={() => setDropdownVisible(!dropdownVisible)}
+          >
+            <Text style={styles.dropdownText}>{selectedClass}</Text>
+            <Ionicons name="chevron-down" size={20} color="#000" />
+          </TouchableOpacity>
 
-        {dropdownVisible && (
-            <ScrollView style={[styles.dropdownMenu, { zIndex: 100 }]}>
-              {classes.map((item) => (
-                  <TouchableOpacity
-                      key={item.id}
-                      style={styles.dropdownItem}
-                      onPress={() => handleSelectClass(item)}
+          {dropdownVisible && (
+              <View style={styles.dropdownMenuWrapper}>
+                <ScrollView style={styles.dropdownMenu}>
+                  {classes.map((item) => (
+                      <TouchableOpacity
+                          key={item.id}
+                          style={styles.dropdownItem}
+                          onPress={() => handleSelectClass(item)}
+                      >
+                        <Text>{item.grade}학년 {item.classNumber}반</Text>
+                      </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              </View>
+          )}
+
+          {classCode && (
+              <View>
+                <View style={styles.pickerContainer}>
+                  <Text style={styles.label}>학년</Text>
+                  <Picker
+                      selectedValue={grade}
+                      onValueChange={(itemValue) => setGrade(itemValue)}
+                      style={[styles.picker, isActive && { backgroundColor: '#E0E0E0' }]}
+                      enabled={!isActive}
                   >
-                    <Text>{item.grade}학년 {item.classNumber}반</Text>
-                  </TouchableOpacity>
-              ))}
-            </ScrollView>
-        )}
+                    {[...Array(6).keys()].map((_, i) => (
+                        <Picker.Item key={i + 1} label={`${i + 1}`} value={`${i + 1}`} />
+                    ))}
+                  </Picker>
+                </View>
 
-        {classCode && (
-            <View>
-              <View style={styles.pickerContainer}>
-                <Text style={styles.label}>학년</Text>
-                <Picker
-                    selectedValue={grade}
-                    onValueChange={(itemValue) => setGrade(itemValue)}
-                    style={styles.picker}
-                >
-                  {[...Array(6).keys()].map((_, i) => (
-                      <Picker.Item key={i + 1} label={`${i + 1}`} value={`${i + 1}`} />
+                <Text style={styles.label}>학기</Text>
+                <View style={styles.radioGroup}>
+                  {['1', '2'].map((sem) => (
+                      <TouchableOpacity
+                          key={sem}
+                          style={[
+                            styles.radioButton,
+                            semester === sem && styles.radioButtonSelected,
+                            isActive && { backgroundColor: '#E0E0E0' },
+                          ]}
+                          onPress={() => !isActive && setSemester(sem)}
+                          disabled={isActive}
+                      >
+                        <Text style={styles.radioText}>{sem} 학기</Text>
+                      </TouchableOpacity>
                   ))}
-                </Picker>
-              </View>
+                </View>
 
-              <Text style={styles.label}>학기</Text>
-              <View style={styles.radioGroup}>
-                {['1', '2'].map((sem) => (
-                    <TouchableOpacity
-                        key={sem}
-                        style={[
-                          styles.radioButton,
-                          semester === sem && styles.radioButtonSelected,
-                        ]}
-                        onPress={() => setSemester(sem)}
-                    >
-                      <Text style={styles.radioText}>{sem} 학기</Text>
-                    </TouchableOpacity>
-                ))}
-              </View>
+                <View style={styles.pickerContainer}>
+                  <Text style={styles.label}>단원</Text>
+                  <Picker
+                      selectedValue={unit}
+                      onValueChange={(itemValue) => setUnit(itemValue)}
+                      style={[styles.picker, isActive && { backgroundColor: '#E0E0E0' }]}
+                      enabled={!isActive}
+                  >
+                    {[...Array(10).keys()].map((_, i) => (
+                        <Picker.Item key={i + 1} label={`${i + 1}`} value={`${i + 1}`} />
+                    ))}
+                  </Picker>
+                </View>
 
-              <View style={styles.pickerContainer}>
-                <Text style={styles.label}>단원</Text>
-                <Picker
-                    selectedValue={unit}
-                    onValueChange={(itemValue) => setUnit(itemValue)}
-                    style={styles.picker}
+                <TouchableOpacity
+                    style={[styles.csvButton, isActive && { backgroundColor: '#E0E0E0' }]}
+                    onPress={handleFileUpload}
+                    disabled={isActive}
                 >
-                  {[...Array(10).keys()].map((_, i) => (
-                      <Picker.Item key={i + 1} label={`${i + 1}`} value={`${i + 1}`} />
-                  ))}
-                </Picker>
+                  <Text style={[styles.csvButtonText, isActive && { color: '#9E9E9E' }]}>CSV 불러오기</Text>
+                </TouchableOpacity>
+
+                <Text style={styles.label}>리워드 설정 (선택)</Text>
+                <TextInput
+                    style={[styles.input, isActive && { backgroundColor: '#E0E0E0' }]}
+                    placeholder="예: 학급 나무에 칭찬 도장 5개!"
+                    value={reward}
+                    onChangeText={setReward}
+                    editable={!isActive}
+                />
+
+                <TouchableOpacity style={styles.button} onPress={handleButtonPress}>
+                  <Text style={styles.buttonText}>{isActive ? '학습 종료' : '학습 시작'}</Text>
+                </TouchableOpacity>
               </View>
-
-              <TouchableOpacity style={styles.csvButton} onPress={handleFileUpload}>
-                <Text style={styles.csvButtonText}>CSV 불러오기</Text>
-              </TouchableOpacity>
-
-              <Text style={styles.label}>리워드 설정 (선택)</Text>
-              <TextInput
-                  style={styles.input}
-                  placeholder="예: 학급 나무에 칭찬 도장 5개!"
-                  value={reward}
-                  onChangeText={setReward}
-              />
-
-              <TouchableOpacity style={styles.button} onPress={handleButtonPress}>
-                <Text style={styles.buttonText}>
-                  {isActive ? '학습 종료' : '학습 시작'}
-                </Text>
-              </TouchableOpacity>
-            </View>
-        )}
-      </View>
+          )}
+        </View>
+      </TouchableWithoutFeedback>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 25,
     flex: 1,
     padding: 16,
-    paddingTop: 40,
     backgroundColor: '#FFFFFF',
   },
   dropdown: {
@@ -242,16 +259,19 @@ const styles = StyleSheet.create({
   dropdownText: {
     fontSize: 16,
   },
+  dropdownMenuWrapper: {
+    position: 'absolute',
+    top: 60,
+    left: 16,
+    right: 16,
+    zIndex: 10,
+  },
   dropdownMenu: {
-    maxHeight: 150,
+    maxHeight: 200,
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 8,
     backgroundColor: '#fff',
-    position: 'absolute',
-    top: 60,
-    width: '100%',
-    zIndex: 10,
   },
   dropdownItem: {
     padding: 16,

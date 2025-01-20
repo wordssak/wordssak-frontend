@@ -59,7 +59,7 @@ const WordListScreen = ({ navigation }) => {
     }
   };
 
-  const renderItem = ({ item }) => (
+  const renderItem = ({ item, index }) => (
       <TouchableOpacity
           onPress={() => handleWordPress(item.wordId)}
           style={[
@@ -67,7 +67,7 @@ const WordListScreen = ({ navigation }) => {
             { opacity: 1 - item.studyCount * 0.2 },
           ]}
       >
-        <Text style={styles.wordId}>{item.wordId}</Text>
+        <Text style={styles.wordId}>{String(index + 1).padStart(2, '0')}</Text>
         <View>
           <Text style={styles.wordText}>{item.word}</Text>
           <Text style={styles.meaningText}>{item.meaning}</Text>
