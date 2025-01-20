@@ -9,10 +9,10 @@ import {
 import axios from 'axios';
 
 const SatisfactionInputScreen = ({ route }) => {
-  const { words } = route.params;
+  const { words = [] } = route.params || {};
 
-  const memorizedCount = words.filter((word) => word.studyCount >= 5).length;
-  const notMemorizedCount = words.length - memorizedCount;
+  const memorizedCount = Array.isArray(words) ? words.filter((word) => word.studyCount >= 5).length : 0;
+  const notMemorizedCount = Array.isArray(words) ? words.length - memorizedCount : 0;
 
   const [selectedSatisfaction, setSelectedSatisfaction] = useState(null);
 
@@ -33,7 +33,7 @@ const SatisfactionInputScreen = ({ route }) => {
     };
 
     try {
-      const response = await axios.post(
+      await axios.post(
           'http://172.30.1.1:8080/api/study/submit',
           payload
       );

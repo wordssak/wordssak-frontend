@@ -23,6 +23,24 @@ const MainScreen = () => {
             >
                 <Text style={styles.buttonText}>교사입니다</Text>
             </TouchableOpacity>
+            <TouchableOpacity
+                style={styles.button}
+                onPress={() => navigation.navigate('WordList')}
+            >
+                <Text style={styles.buttonText}>학습 시작</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={styles.button}
+                onPress={() => navigation.navigate('DashboardHome')}
+            >
+                <Text style={styles.buttonText}>선생님 대시보드</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={styles.button}
+                onPress={() => navigation.navigate('DashboardProgress')}
+            >
+                <Text style={styles.buttonText}>만족도</Text>
+            </TouchableOpacity>
         </View>
     );
 };
