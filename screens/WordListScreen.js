@@ -9,36 +9,44 @@ import {
   Image,
 } from 'react-native';
 import axios from 'axios';
-import { useNavigation } from '@react-navigation/native';
 
-const WordListScreen = ({ route }) => {
-  const navigation = useNavigation();
+const WordListScreen = ({ navigation }) => {
   const [words, setWords] = useState([]);
   const [isAllCompleted, setIsAllCompleted] = useState(false);
+  const [activeStatus, setActiveStatus] = useState(true);
+  const [satisfactionCompleted, setSatisfactionCompleted] = useState(false);
 
   useEffect(() => {
-    fetchWords();
+    fetchWordData();
   }, []);
 
-  // 단어 목록 가져오기
-  const fetchWords = async () => {
+  const fetchWordData = async () => {
     try {
-      const response = await axios.get(
-          `http://172.30.1.1:8080/api/progress/words/1`
-      );
-      setWords(response.data);
-      checkIfAllWordsCompleted(response.data);
+      const response = await axios.get(`http://172.30.1.1:8080/api/progress/words/1`);
+      const { activeStatus = true, satisfactionCompleted = false, wordList = [] } = response.data;
+
+      setActiveStatus(activeStatus);
+      setSatisfactionCompleted(satisfactionCompleted);
+
+      if (!activeStatus && !satisfactionCompleted) {
+        navigation.replace('SatisfactionInput', { studentId: 1 });
+      } else if (activeStatus) {
+        setWords(wordList);
+        checkIfAllWordsCompleted(wordList);
+      }
     } catch (error) {
-      Alert.alert('오류', '단어를 불러오는 중 문제가 발생했습니다.');
+      Alert.alert('오류', '데이터를 불러오는 중 문제가 발생했습니다.');
     }
   };
 
-  // 단어 클릭 핸들러 (진척도 증가)
+  const checkIfAllWordsCompleted = (wordList) => {
+    const allCompleted = wordList.length > 0 && wordList.every((word) => word.studyCount >= 5);
+    setIsAllCompleted(allCompleted);
+  };
+
   const handleWordPress = async (wordId) => {
     try {
-      await axios.post(
-          `http://172.30.1.1:8080/api/progress/study/${wordId}/1`
-      );
+      await axios.post(`http://172.30.1.1:8080/api/progress/study/${wordId}/1`);
       const updatedWords = words.map((word) =>
           word.wordId === wordId
               ? { ...word, studyCount: Math.min(word.studyCount + 1, 5) }
@@ -47,22 +55,11 @@ const WordListScreen = ({ route }) => {
       setWords(updatedWords);
       checkIfAllWordsCompleted(updatedWords);
     } catch (error) {
-      Alert.alert('오류', '학습 진척도 업데이트 중 오류가 발생했습니다.');
+      Alert.alert('오류', '학습 진척도 업데이트 중 문제가 발생했습니다.');
     }
   };
 
-  // 모든 단어의 진척도가 5인지 확인
-  const checkIfAllWordsCompleted = (words) => {
-    const allCompleted = words.every((word) => word.studyCount >= 5);
-    setIsAllCompleted(allCompleted);
-  };
-
-  const handleFinishStudy = () => {
-    navigation.navigate('SatisfactionInput', { words });
-  };
-
-  // 단어 목록 렌더링
-  const renderItem = ({ item }) => (
+  const renderItem = ({ item, index }) => (
       <TouchableOpacity
           onPress={() => handleWordPress(item.wordId)}
           style={[
@@ -70,7 +67,7 @@ const WordListScreen = ({ route }) => {
             { opacity: 1 - item.studyCount * 0.2 },
           ]}
       >
-        <Text style={styles.wordId}>{item.wordId}</Text>
+        <Text style={styles.wordId}>{String(index + 1).padStart(2, '0')}</Text>
         <View>
           <Text style={styles.wordText}>{item.word}</Text>
           <Text style={styles.meaningText}>{item.meaning}</Text>
@@ -83,7 +80,7 @@ const WordListScreen = ({ route }) => {
     return (
         <View style={styles.completedContainer}>
           <Image
-              source={require('../assets/completed.png')}  // 학습 완료 이미지
+              source={require('../assets/completed.png')}
               style={styles.completedImage}
           />
           <Text style={styles.completedText}>학습이 끝났어요!</Text>
@@ -98,12 +95,6 @@ const WordListScreen = ({ route }) => {
             renderItem={renderItem}
             keyExtractor={(item) => item.wordId.toString()}
         />
-        <TouchableOpacity
-            style={styles.finishButton}
-            onPress={handleFinishStudy}
-        >
-          <Text style={styles.finishButtonText}>학습 종료</Text>
-        </TouchableOpacity>
       </View>
   );
 };
@@ -147,19 +138,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#9CA3AF',
     marginTop: 2,
-  },
-  finishButton: {
-    marginTop: 24,
-    backgroundColor: '#4CAF50',
-    padding: 16,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  finishButtonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
   },
   completedContainer: {
     flex: 1,
