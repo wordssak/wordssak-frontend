@@ -4,6 +4,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Image,
   Alert,
 } from 'react-native';
 import axios from 'axios';
@@ -64,33 +65,39 @@ const SatisfactionInputScreen = ({ route }) => {
               style={[
                 styles.satisfactionButton,
                 selectedSatisfaction === 'BEST' && styles.satisfactionSelected,
-                { backgroundColor: '#4CAF50' },
               ]}
               onPress={() => handleSatisfactionSelect('BEST')}
           >
-            <Text style={styles.satisfactionText}>BEST</Text>
+            <Image
+                source={require('../assets/best.png')}
+                style={styles.satisfactionImage}
+            />
           </TouchableOpacity>
 
           <TouchableOpacity
               style={[
                 styles.satisfactionButton,
                 selectedSatisfaction === 'GOOD' && styles.satisfactionSelected,
-                { backgroundColor: '#FFC107' },
               ]}
               onPress={() => handleSatisfactionSelect('GOOD')}
           >
-            <Text style={styles.satisfactionText}>GOOD</Text>
+            <Image
+                source={require('../assets/good.png')}
+                style={styles.satisfactionImage}
+            />
           </TouchableOpacity>
 
           <TouchableOpacity
               style={[
                 styles.satisfactionButton,
                 selectedSatisfaction === 'BAD' && styles.satisfactionSelected,
-                { backgroundColor: '#FF5252' },
               ]}
               onPress={() => handleSatisfactionSelect('BAD')}
           >
-            <Text style={styles.satisfactionText}>BAD</Text>
+            <Image
+                source={require('../assets/bad.png')}
+                style={styles.satisfactionImage}
+            />
           </TouchableOpacity>
         </View>
 
@@ -110,16 +117,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 24,
+    marginBottom: 32,
     color: '#3A4A5E',
   },
   statsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    width: '100%',
+    width: '80%',
     marginBottom: 24,
+    paddingVertical: 12,
+    borderRadius: 12,
+    backgroundColor: '#F5F5F5',
   },
   stat: {
     alignItems: 'center',
@@ -127,6 +137,7 @@ const styles = StyleSheet.create({
   statLabel: {
     fontSize: 16,
     color: '#3A4A5E',
+    marginBottom: 8,
   },
   statValue: {
     fontSize: 18,
@@ -135,32 +146,38 @@ const styles = StyleSheet.create({
   },
   satisfactionContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
-    marginBottom: 24,
+    justifyContent: 'space-between',
+    width: '80%',
+    marginBottom: 32,
   },
   satisfactionButton: {
     width: 80,
-    height: 80,
-    borderRadius: 40,
+    height: 100,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#F0F0F0',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   satisfactionSelected: {
     borderWidth: 3,
-    borderColor: '#000000',
+    borderColor: '#3A4A5E',
   },
-  satisfactionText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
+  satisfactionImage: {
+    width: 50,
+    height: 85,
+    marginBottom: 8,
   },
   confirmButton: {
     backgroundColor: '#C9E6F0',
-    padding: 16,
-    borderRadius: 8,
+    paddingVertical: 14,
+    borderRadius: 12,
     alignItems: 'center',
-    width: '80%',
+    width: '70%',
   },
   confirmButtonText: {
     fontSize: 16,
@@ -168,5 +185,6 @@ const styles = StyleSheet.create({
     color: '#3A4A5E',
   },
 });
+
 
 export default SatisfactionInputScreen;

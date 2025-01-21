@@ -13,6 +13,7 @@ import DashboardScreen from "./screens/DashboardScreen";
 import OurClassInfoScreen from "./screens/OurClassInfoScreen";
 import StudentCodeInputScreen from "./screens/StudentCodeInputScreen";
 import StudentLoginScreen from "./screens/StudentLoginScreen";
+import StudyProgressScreen from "./screens/StudyProgressScreen";
 
 const Stack = createStackNavigator();
 
@@ -32,6 +33,8 @@ const App = () => {
                 <Stack.Screen name="StudentCodeInput" component={StudentCodeInputScreen}/>
                 <Stack.Screen name="StudentLogin" component={StudentLoginScreen}/>
                 <Stack.Screen name="WordList" component={WordListScreen}/>
+              <Stack.Screen name="StudyProgress" component={StudyProgressScreen}/>
+
             </Stack.Navigator>
         </NavigationContainer>
     );

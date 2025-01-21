@@ -16,7 +16,7 @@ import { Picker } from '@react-native-picker/picker';
 import * as DocumentPicker from 'expo-document-picker';
 import * as XLSX from 'xlsx';
 
-const DashboardHomeScreen = () => {
+const DashboardHomeScreen = ({ navigation }) => {
   const [selectedClass, setSelectedClass] = useState('반을 선택하세요');
   const [classCode, setClassCode] = useState('');
   const [classes, setClasses] = useState([]);
@@ -138,6 +138,14 @@ const DashboardHomeScreen = () => {
     }
   };
 
+  const handleStudyProgress = () => {
+    if (!classCode) {
+      Alert.alert('알림', '반을 먼저 선택해주세요!');
+      return;
+    }
+    navigation.navigate('StudyProgress', { classroomId: classCode });
+  };
+
   return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
@@ -233,6 +241,13 @@ const DashboardHomeScreen = () => {
                 <TouchableOpacity style={styles.button} onPress={handleButtonPress}>
                   <Text style={styles.buttonText}>{isActive ? '학습 종료' : '학습 시작'}</Text>
                 </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={[styles.button, { backgroundColor: '#4caf50', marginTop: 16 }]}
+                    onPress={handleStudyProgress}
+                >
+                  <Text style={styles.buttonText}>학습 현황</Text>
+                </TouchableOpacity>
               </View>
           )}
         </View>
@@ -242,7 +257,7 @@ const DashboardHomeScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 25,
+    paddingTop: 40,
     flex: 1,
     padding: 16,
     backgroundColor: '#FFFFFF',
@@ -261,6 +276,7 @@ const styles = StyleSheet.create({
   },
   dropdownMenuWrapper: {
     position: 'absolute',
+    paddingTop: 25,
     top: 60,
     left: 16,
     right: 16,
