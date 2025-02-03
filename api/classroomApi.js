@@ -13,7 +13,7 @@ export const postSubmitClassInfo = async (registerClassInfoRequest, navigation) 
         Alert.alert('클래스 등록', '클래스가 등록되었습니다.', [
             {
                 text: '확인',
-                onPress: () => navigation.navigate('Dashboard')
+                onPress: () => navigation.navigate('DashboardHome')
             }
         ]);
     } catch (error) {
@@ -74,7 +74,7 @@ export const deleteClassroom = async (classroomId, navigation) => {
                         {
                             text: '확인',
                             onPress: () =>
-                                navigation.replace('Dashboard'),
+                                navigation.replace('DashboardHome'),
                         }
                     ]);
                 } catch (error) {

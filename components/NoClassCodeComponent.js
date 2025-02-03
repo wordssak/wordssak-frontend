@@ -17,16 +17,6 @@ export default function NoClassCodeComponent({activeTab, setActiveTab, navigatio
 
     return (
         <View style={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.title}>대시보드</Text>
-                <TouchableOpacity style={styles.addButton} onPress={handleAddClass}>
-                    <Image
-                        source={require('../assets/plus-button.png')}
-                        style={styles.addButtonImage}
-                    />
-                </TouchableOpacity>
-            </View>
-
             <View style={styles.content}>
                 <Image
                     source={require('../assets/cloud-placeholder.png')}
@@ -35,38 +25,6 @@ export default function NoClassCodeComponent({activeTab, setActiveTab, navigatio
                 <Text style={styles.description}>등록된 클래스 코드가 없어요!</Text>
                 <TouchableOpacity style={styles.createButton} onPress={handleCreateClassCode}>
                     <Text style={styles.createButtonText}>클래스 코드 만들러 가기</Text>
-                </TouchableOpacity>
-            </View>
-
-            <View style={styles.footer}>
-                <TouchableOpacity
-                    style={styles.footerButton}
-                    onPress={() => handleTabPress('classManagement')}
-                >
-                    <Image
-                        source={
-                            activeTab === 'classManagement'
-                                ? require('../assets/mingcute_board-fill-activated.png')
-                                : require('../assets/mingcute_board-fill-deactivated.png')
-                        }
-                        style={styles.footerButtonIcon}
-                    />
-                    <Text style={styles.footerButtonText}>클래스 관리</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    style={styles.footerButton}
-                    onPress={() => handleTabPress('learningStatus')}
-                >
-                    <Image
-                        source={
-                            activeTab === 'learningStatus'
-                                ? require('../assets/majesticons_list-box-activated.png')
-                                : require('../assets/majesticons_list-box-deactivated.png')
-                        }
-                        style={styles.footerButtonIcon}
-                    />
-                    <Text style={styles.footerButtonText}>학습 현황</Text>
                 </TouchableOpacity>
             </View>
         </View>

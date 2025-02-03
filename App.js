@@ -21,20 +21,19 @@ const App = () => {
     return (
         <NavigationContainer>
             <Stack.Navigator screenOptions={{headerShown: false}}>
-                <Stack.Screen name="Main" component={MainScreen}/>
-                <Stack.Screen name="TeacherLogin" component={TeacherLoginScreen}/>
+              <Stack.Screen name="Main" component={MainScreen}/>
+              <Stack.Screen name="TeacherLogin" component={TeacherLoginScreen}/>
               <Stack.Screen name="WordSetConfig" component={WordSetConfigScreen} />
               <Stack.Screen name="DashboardHome" component={DashboardHomeScreen} />
               <Stack.Screen name="DashboardProgress" component={DashboardProgressScreen} />
               <Stack.Screen name="SatisfactionInput" component={SatisfactionInputScreen} />
-                <Stack.Screen name="TeacherSignUp" component={TeacherSignUpScreen}/>
-                <Stack.Screen name="Dashboard" component={DashboardScreen}/>
-                <Stack.Screen name="OurClassInfo" component={OurClassInfoScreen}/>
-                <Stack.Screen name="StudentCodeInput" component={StudentCodeInputScreen}/>
-                <Stack.Screen name="StudentLogin" component={StudentLoginScreen}/>
-                <Stack.Screen name="WordList" component={WordListScreen}/>
+              <Stack.Screen name="TeacherSignUp" component={TeacherSignUpScreen}/>
+              <Stack.Screen name="Dashboard" component={DashboardScreen}/>
+              <Stack.Screen name="OurClassInfo" component={OurClassInfoScreen}/>
+              <Stack.Screen name="StudentCodeInput" component={StudentCodeInputScreen}/>
+              <Stack.Screen name="StudentLogin" component={StudentLoginScreen}/>
+              <Stack.Screen name="WordList" component={WordListScreen}/>
               <Stack.Screen name="StudyProgress" component={StudyProgressScreen}/>
-
             </Stack.Navigator>
         </NavigationContainer>
     );

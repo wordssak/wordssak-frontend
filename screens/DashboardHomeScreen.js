@@ -9,14 +9,21 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   Keyboard,
+    Image,
 } from 'react-native';
 import axios from 'axios';
 import { Ionicons } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
 import * as DocumentPicker from 'expo-document-picker';
 import * as XLSX from 'xlsx';
+import {useRoute} from "@react-navigation/native";
+import NoClassCodeComponent from "../components/NoClassCodeComponent";
+import {deleteClassroom} from "../api/classroomApi";
 
-const DashboardHomeScreen = ({ navigation }) => {
+
+const DashboardHomeScreen = ({ classrooms, navigation }) => {
+  const route = useRoute();
+
   const [selectedClass, setSelectedClass] = useState('반을 선택하세요');
   const [classCode, setClassCode] = useState('');
   const [classes, setClasses] = useState([]);
@@ -34,26 +41,56 @@ const DashboardHomeScreen = ({ navigation }) => {
 
   const fetchClassrooms = async () => {
     try {
-      const response = await axios.get('http://172.30.1.1:8080/classrooms/list/1');
+      const response = await axios.get(`http://172.30.1.1:8080/classrooms/list`);
       setClasses(response.data);
+      if (response.data.length > 0) {
+        setSelectedClass(`${response.data[0].grade}학년 ${response.data[0].classNumber}반`);
+        setClassCode(response.data[0].classCode);
+      }
     } catch (error) {
-      Alert.alert('오류', '반 목록을 불러오는 중 문제가 발생했습니다.');
+      console.error(error);
     }
   };
+  if (classes.length === 0) {
+    return (
+        <NoClassCodeComponent
+            navigation={navigation}
+        />
+    );
+  }
 
-  const fetchActiveStatus = async (classCode) => {
+  const currentClassroom = classes.find((classroom) => classroom.classCode === classCode) || classes[0];
+
+  if (!currentClassroom) {
+    return <Text>클래스 정보가 없습니다.</Text>;
+  }
+
+  const handleAddClass = () => {
+    navigation.navigate('OurClassInfo', { schoolName: currentClassroom.schoolName });
+  };
+  const handleDeleteClass = async () => {
+    await deleteClassroom(currentClassroom.id, navigation);
+  };
+
+  const fetchActiveStatus = async (selectedClassCode) => {
     try {
-      const response = await axios.get(`http://172.30.1.1:8080/class-wordbooks/status/${classCode}`);
+      const response = await axios.get(`http://172.30.1.1:8080/class-wordbooks/status/${selectedClassCode}`);
+      console.log(`Fetching active status for: ${selectedClassCode}, Status: ${response.data.activeStatus}`);
+
       setIsActive(response.data.activeStatus);
     } catch (error) {
-      Alert.alert('오류', '등록 단어장 상태를 가져오는 중 문제가 발생했습니다.');
+      console.error(`Error fetching status for classCode ${selectedClassCode}:`, error);
     }
   };
 
+
   const handleSelectClass = (item) => {
+    console.log(`Selected Class: ${item.classCode}`);
+
     setSelectedClass(`${item.grade}학년 ${item.classNumber}반`);
     setClassCode(item.classCode);
     setDropdownVisible(false);
+
     fetchActiveStatus(item.classCode);
   };
 
@@ -149,13 +186,20 @@ const DashboardHomeScreen = ({ navigation }) => {
   return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
-          <TouchableOpacity
-              style={styles.dropdown}
-              onPress={() => setDropdownVisible(!dropdownVisible)}
-          >
+          <View style={styles.topBar}>
+          <TouchableOpacity style={styles.dropdown} onPress={() => setDropdownVisible(!dropdownVisible)}>
             <Text style={styles.dropdownText}>{selectedClass}</Text>
             <Ionicons name="chevron-down" size={20} color="#000" />
           </TouchableOpacity>
+
+            <TouchableOpacity onPress={handleAddClass} style={styles.iconButton}>
+              <Image source={require('../assets/plus-button.png')} style={styles.icon} />
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={handleDeleteClass} style={styles.iconButton}>
+              <Image source={require('../assets/delete-button.png')} style={styles.icon} />
+            </TouchableOpacity>
+        </View>
 
           {dropdownVisible && (
               <View style={styles.dropdownMenuWrapper}>
@@ -175,18 +219,27 @@ const DashboardHomeScreen = ({ navigation }) => {
 
           {classCode && (
               <View>
+
                 <View style={styles.pickerContainer}>
+                  <Text style={styles.label}>클래스 코드</Text>
+                  <TextInput
+                      style={[styles.input, styles.disabledInput]}
+                      value={currentClassroom.classCode}
+                      editable={false}
+                  />
+
                   <Text style={styles.label}>학년</Text>
                   <Picker
                       selectedValue={grade}
                       onValueChange={(itemValue) => setGrade(itemValue)}
-                      style={[styles.picker, isActive && { backgroundColor: '#E0E0E0' }]}
-                      enabled={!isActive}
+                      style={[styles.picker, classCode === currentClassroom.classCode && isActive && { backgroundColor: '#E0E0E0' }]}
+                      enabled={classCode !== currentClassroom.classCode || !isActive} // 🔹 현재 선택된 반만 비활성화
                   >
                     {[...Array(6).keys()].map((_, i) => (
                         <Picker.Item key={i + 1} label={`${i + 1}`} value={`${i + 1}`} />
                     ))}
                   </Picker>
+
                 </View>
 
                 <Text style={styles.label}>학기</Text>
@@ -262,7 +315,14 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: '#FFFFFF',
   },
+  topBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    marginBottom: 8,
+  },
   dropdown: {
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 12,
@@ -273,6 +333,10 @@ const styles = StyleSheet.create({
   },
   dropdownText: {
     fontSize: 16,
+  },
+  iconButton: {
+    marginLeft: 5,
+    padding: 8,
   },
   dropdownMenuWrapper: {
     position: 'absolute',

@@ -8,9 +8,13 @@ import {
   Alert,
   Image,
 } from 'react-native';
+import { useRoute } from '@react-navigation/native';
 import axios from 'axios';
 
 const WordListScreen = ({ navigation }) => {
+  const route = useRoute();
+  const { studentId } = route.params || {};
+
   const [words, setWords] = useState([]);
   const [isAllCompleted, setIsAllCompleted] = useState(false);
   const [activeStatus, setActiveStatus] = useState(true);
@@ -22,14 +26,16 @@ const WordListScreen = ({ navigation }) => {
 
   const fetchWordData = async () => {
     try {
-      const response = await axios.get(`http://172.30.1.1:8080/api/progress/words/1`);
+      const response = await axios.get(
+          `http://172.30.1.1:8080/api/progress/words/${studentId}`
+      );
       const { activeStatus = true, satisfactionCompleted = false, wordList = [] } = response.data;
 
       setActiveStatus(activeStatus);
       setSatisfactionCompleted(satisfactionCompleted);
 
       if (!activeStatus && !satisfactionCompleted) {
-        navigation.replace('SatisfactionInput', { studentId: 1 });
+        navigation.replace('SatisfactionInput', { studentId });
       } else if (activeStatus) {
         setWords(wordList);
         checkIfAllWordsCompleted(wordList);
@@ -46,7 +52,9 @@ const WordListScreen = ({ navigation }) => {
 
   const handleWordPress = async (wordId) => {
     try {
-      await axios.post(`http://172.30.1.1:8080/api/progress/study/${wordId}/1`);
+      await axios.post(
+          `http://172.30.1.1:8080/api/progress/study/${wordId}/${studentId}`
+      );
       const updatedWords = words.map((word) =>
           word.wordId === wordId
               ? { ...word, studyCount: Math.min(word.studyCount + 1, 5) }

@@ -15,7 +15,7 @@ export const postTeacherSignUp = async (signUpForm, navigation) => {
                 onPress: () =>
                     navigation.reset({
                         index: 0,
-                        routes: [{name: 'Dashboard'}],
+                        routes: [{name: 'TeacherLogin'}],
                     }),
             }
         ]);
@@ -49,18 +49,22 @@ export const postTeacherSignIn = async (signInForm, navigation) => {
                 'Content-Type': 'application/json',
             },
         });
-        Alert.alert('로그인 성공', `${response.data}님 로그인되었습니다.`, [
+
+        const teacherId = response.data.teacherId;
+        console.log(teacherId);
+
+        Alert.alert('로그인 성공', ``, [
             {
                 text: '확인',
                 onPress: () =>
                     navigation.reset({
                         index: 0,
-                        routes: [{name: 'Dashboard'}],
+                        routes: [{ name: 'DashboardHome', params: { teacherId } }],
                     }),
             }
         ]);
     } catch (error) {
-        if (error.status === 404) {
+        if (error.response?.status === 404) {
             Alert.alert('존재하지 않는 회원', '존재하지 않는 이메일 주소입니다.', [
                 {
                     text: '확인',
@@ -69,13 +73,12 @@ export const postTeacherSignIn = async (signInForm, navigation) => {
             return;
         }
 
-        if (error.status === 400) {
+        if (error.response?.status === 400) {
             Alert.alert('잘못된 비밀번호', '비밀번호가 일치하지 않습니다. 다시 시도해 주세요.', [
                 {
                     text: '확인',
                 }
             ]);
-
             return;
         }
 
