@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -9,13 +9,31 @@ import {
 } from 'react-native';
 import axios from 'axios';
 
-const SatisfactionInputScreen = ({ route }) => {
-  const { words = [] } = route.params || {};
+const SatisfactionInputScreen = ({ route, navigation }) => {
+  const words = Array.isArray(route.params?.words) ? route.params.words : [];
 
-  const memorizedCount = Array.isArray(words) ? words.filter((word) => word.studyCount >= 5).length : 0;
-  const notMemorizedCount = Array.isArray(words) ? words.length - memorizedCount : 0;
-
+  const [memorizedCount, setMemorizedCount] = useState(0);
+  const [notMemorizedCount, setNotMemorizedCount] = useState(0);
   const [selectedSatisfaction, setSelectedSatisfaction] = useState(null);
+
+  useEffect(() => {
+
+      fetchMemorizedCount();
+
+  }, []);
+
+
+  const fetchMemorizedCount = async () => {
+    try {
+      const response = await axios.get(`http://172.30.1.1:8080/api/progress/memorized-count`);
+      const { memorizedCount, notMemorizedCount } = response.data;
+      setMemorizedCount(memorizedCount);
+      setNotMemorizedCount(notMemorizedCount);
+    } catch (error) {
+      Alert.alert('오류', '데이터를 불러오는 중 문제가 발생했습니다.');
+    }
+  };
+
 
   const handleSatisfactionSelect = (level) => {
     setSelectedSatisfaction(level);
@@ -34,11 +52,10 @@ const SatisfactionInputScreen = ({ route }) => {
     };
 
     try {
-      await axios.post(
-          'http://172.30.1.1:8080/api/study/submit',
-          payload
-      );
+      await axios.post('http://172.30.1.1:8080/api/study/submit', payload);
       Alert.alert('성공', '학습 결과가 성공적으로 저장되었습니다.');
+
+      navigation.replace('WordList', { satisfactionCompleted: true });
     } catch (error) {
       console.error('서버 요청 실패:', error);
       Alert.alert('오류 발생', '서버와 통신하는 중 문제가 발생했습니다.');
@@ -185,6 +202,5 @@ const styles = StyleSheet.create({
     color: '#3A4A5E',
   },
 });
-
 
 export default SatisfactionInputScreen;

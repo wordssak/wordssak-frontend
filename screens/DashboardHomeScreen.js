@@ -180,7 +180,7 @@ const DashboardHomeScreen = ({ classrooms, navigation }) => {
       Alert.alert('알림', '반을 먼저 선택해주세요!');
       return;
     }
-    navigation.navigate('StudyProgress', { classroomId: classCode });
+    navigation.navigate('StudyProgress', { classroomCode: classCode });
   };
 
   return (
@@ -283,24 +283,36 @@ const DashboardHomeScreen = ({ classrooms, navigation }) => {
                 </TouchableOpacity>
 
                 <Text style={styles.label}>리워드 설정 (선택)</Text>
-                <TextInput
-                    style={[styles.input, isActive && { backgroundColor: '#E0E0E0' }]}
-                    placeholder="예: 학급 나무에 칭찬 도장 5개!"
-                    value={reward}
-                    onChangeText={setReward}
-                    editable={!isActive}
-                />
+                <View style={styles.rewardBox}>
+                  <TextInput
+                      style={styles.rewardInput}
+                      placeholder="예: 학급 나무에 칭찬 도장 5개!"
+                      value={reward}
+                      onChangeText={setReward}
+                      editable={!isActive}
+                  />
+                </View>
+
 
                 <TouchableOpacity style={styles.button} onPress={handleButtonPress}>
                   <Text style={styles.buttonText}>{isActive ? '학습 종료' : '학습 시작'}</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity
-                    style={[styles.button, { backgroundColor: '#4caf50', marginTop: 16 }]}
-                    onPress={handleStudyProgress}
-                >
-                  <Text style={styles.buttonText}>학습 현황</Text>
-                </TouchableOpacity>
+                <View style={styles.bottomNav}>
+                  {/* 클래스 관리 버튼 (현재 페이지) */}
+                  <TouchableOpacity style={[styles.navButton, styles.activeNav]}>
+                    <Text style={styles.navButtonText}>클래스 관리</Text>
+                  </TouchableOpacity>
+
+                  {/* 학습 현황 버튼 */}
+                  <TouchableOpacity
+                      style={styles.navButton}
+                      onPress={() => navigation.navigate('StudyProgress', { classroomCode: classCode })}
+                  >
+                    <Text style={styles.navButtonText}>학습 현황</Text>
+                  </TouchableOpacity>
+                </View>
+
               </View>
           )}
         </View>
@@ -393,7 +405,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   button: {
-    marginTop: 24,
+    marginTop: 14,
     backgroundColor: '#7fb6f5',
     padding: 16,
     borderRadius: 8,
@@ -404,6 +416,22 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontWeight: 'bold',
   },
+  bottomNav: { flexDirection: 'row', justifyContent: 'space-around', paddingVertical: 12, borderTopWidth: 1, borderTopColor: '#EDEFF1', backgroundColor: '#F9FAFB', marginTop: 20 },
+  navButton: { paddingVertical: 8, paddingHorizontal: 16 },
+  navButtonText: { fontSize: 14, fontWeight: 'bold', color: '#6B7280' },
+  activeNav: { borderBottomWidth: 2, borderBottomColor: '#3498db' },
+  rewardBox: {
+    backgroundColor: '#F9FAFB',
+    borderColor: '#D1D5DB',
+    borderRadius: 12,
+    padding: 4,
+    marginTop: 5,
+  },
+  rewardInput: {
+    fontSize: 16,
+    color: '#374151',
+  },
+
 });
 
 export default DashboardHomeScreen;

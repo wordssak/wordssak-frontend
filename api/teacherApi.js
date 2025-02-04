@@ -53,7 +53,7 @@ export const postTeacherSignIn = async (signInForm, navigation) => {
         const teacherId = response.data.teacherId;
         console.log(teacherId);
 
-        Alert.alert('로그인 성공', ``, [
+        Alert.alert('로그인 성공', `로그인에 성공했습니다.`, [
             {
                 text: '확인',
                 onPress: () =>
